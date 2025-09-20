@@ -1,18 +1,23 @@
-from rest_framework import serializers
-from .models import Listing, Booking, Review
+#!/usr/bin/env python3
+"""
+Serializers for Listing and Booking models.
+"""
 
-class BookingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Booking
-        fields = '__all__'
+from rest_framework import serializers
+from .models import Listing, Booking
+
 
 class ListingSerializer(serializers.ModelSerializer):
-    bookings = BookingSerializer(many=True, read_only=True)
-    reviews_count = serializers.SerializerMethodField()
+    """Serializer for the Listing model."""
 
     class Meta:
         model = Listing
-        fields = ['id', 'title', 'description', 'price_per_night', 'location', 'created_at', 'bookings', 'reviews_count']
+        fields = ['id', 'title', 'description', 'location', 'price_per_night', 'created_at']
 
-    def get_reviews_count(self, obj):
-        return obj.reviews.count()
+
+class BookingSerializer(serializers.ModelSerializer):
+    """Serializer for the Booking model."""
+
+    class Meta:
+        model = Booking
+        fields = ['id', 'listing', 'user', 'check_in', 'check_out', 'created_at']
